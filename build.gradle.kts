@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.konan.target.HostManager
 plugins {
     kotlin("multiplatform") version "1.3.61"
     id("maven-publish")
+    id("com.android.library") version "3.5.3"
 }
 repositories {
     mavenCentral()
@@ -11,8 +12,18 @@ group = "com.example"
 version = "0.0.1"
 
 kotlin {
-    jvm()
+    android {
+        publishLibraryVariants("release", "debug")
+    }
     ios()
+
+    /**
+     * Other Apple Options– un-comment each to enable
+     */
+    //watchos()
+    //iosArm32()
+    //tvos()
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -25,18 +36,23 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
             }
         }
-        val jvmMain by getting {
+        val androidMain by getting {
             dependencies {
                 implementation(kotlin("stdlib"))
             }
         }
-        val jvmTest by getting {
+        val androidTest by getting {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
             }
         }
     }
+}
+
+// Enough settings to gradle sync, but more can be added
+android {
+    compileSdkVersion = "29"
 }
 
 if (HostManager.hostIsMac) {
