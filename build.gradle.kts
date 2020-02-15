@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.konan.target.HostManager
+import org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     kotlin("multiplatform") version "1.3.61"
@@ -15,10 +17,16 @@ kotlin {
     android {
         publishLibraryVariants("release", "debug")
     }
-    ios()
+    ios {
+        binaries {
+            framework()
+        }
+    }
 
     /**
      * Other Apple Options– un-comment each to enable
+     *
+     * each target will need its own `binaries { framework() }` configuration
      */
     //watchos()
     //iosArm32()
@@ -50,6 +58,27 @@ kotlin {
     }
 }
 
+tasks.register("debugFatFramework", FatFrameworkTask::class) {
+    baseName = project.name
+
+    // Framework is output here
+    destinationDir = buildDir.resolve("fat-framework/debug")
+
+    val targets = mutableListOf(
+        kotlin.iosX64(),
+        kotlin.iosArm64()
+    )
+
+    /**
+     * Un-comment/modify to include additional targets
+     *
+     * targets.add(kotlin.iosArm32())
+     */
+
+    // Specify the frameworks to be merged.
+    from(targets.map { it.binaries.getFramework(NativeBuildType.DEBUG) })
+}
+
 // Enough settings to gradle sync, but more can be added
 android {
     compileSdkVersion = "29"
@@ -69,7 +98,7 @@ if (HostManager.hostIsMac) {
                 "spawn",
                 "-s",
                 device,
-                iosX64.binaries.getTest("DEBUG").outputFile
+                iosX64.binaries.getTest(NativeBuildType.DEBUG).outputFile
             )
         )
     }
