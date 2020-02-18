@@ -81,7 +81,7 @@ tasks.register("debugFatFramework", FatFrameworkTask::class) {
 
 // Enough settings to gradle sync, but more can be added
 android {
-    compileSdkVersion = "29"
+    compileSdkVersion(29)
 }
 
 if (HostManager.hostIsMac) {
