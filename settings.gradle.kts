@@ -1,5 +1,4 @@
 rootProject.name = "KotlinMobileBootstrap"
-enableFeaturePreview("GRADLE_METADATA")
 pluginManagement {
     repositories {
         gradlePluginPortal()

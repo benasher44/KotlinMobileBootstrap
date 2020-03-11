@@ -1,11 +1,10 @@
-import org.jetbrains.kotlin.konan.target.HostManager
 import org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
-    kotlin("multiplatform") version "1.3.61"
+    kotlin("multiplatform") version "1.3.70"
     id("maven-publish")
-    id("com.android.library") version "3.5.3"
+    id("com.android.library") version "3.6.1"
 }
 repositories {
     mavenCentral()
@@ -82,29 +81,4 @@ tasks.register("debugFatFramework", FatFrameworkTask::class) {
 // Enough settings to gradle sync, but more can be added
 android {
     compileSdkVersion(29)
-}
-
-if (HostManager.hostIsMac) {
-    val iosTest = tasks.register("iosTest", Exec::class) {
-        val iosX64 = kotlin.iosX64()
-        val device = project.findProperty("iosDevice")?.toString() ?: "iPhone 8"
-        dependsOn(iosX64.binaries.getTest("DEBUG").linkTaskName)
-        group = JavaBasePlugin.VERIFICATION_GROUP
-        description = """Runs tests for target "ios" on an iOS simulator"""
-        executable = "xcrun"
-        setArgs(
-            listOf(
-                "simctl",
-                "spawn",
-                "-s",
-                device,
-                iosX64.binaries.getTest(NativeBuildType.DEBUG).outputFile
-            )
-        )
-    }
-
-    val checkTask = tasks.named("check")
-    checkTask.configure {
-        dependsOn(iosTest)
-    }
 }
