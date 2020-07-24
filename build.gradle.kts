@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 plugins {
     kotlin("multiplatform") version "1.3.72"
     id("maven-publish")
-    id("com.android.library") version "3.6.1"
+    id("com.android.library") version "3.6.4"
 }
 repositories {
     mavenCentral()
