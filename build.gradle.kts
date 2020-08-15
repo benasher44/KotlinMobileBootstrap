@@ -42,6 +42,7 @@ kotlin {
         }
         val androidTest by getting {
             dependencies {
+                // https://youtrack.jetbrains.com/issue/KT-41097
                 implementation(kotlin("test-junit"))
             }
         }
