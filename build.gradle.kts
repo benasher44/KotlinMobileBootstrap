@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask
 import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
-    kotlin("multiplatform") version "1.3.72"
+    kotlin("multiplatform") version "1.4.0"
     id("maven-publish")
-    id("com.android.library") version "3.6.4"
+    id("com.android.library") version "4.0.1"
 }
 repositories {
     mavenCentral()
@@ -15,6 +15,9 @@ version = "0.0.1"
 kotlin {
     android {
         publishLibraryVariants("release", "debug")
+        compilations.all {
+            kotlinOptions.jvmTarget = "1.8"
+        }
     }
     ios {
         binaries {
@@ -32,25 +35,13 @@ kotlin {
     //tvos()
 
     sourceSets {
-        val commonMain by getting {
+        commonTest {
             dependencies {
-                implementation(kotlin("stdlib-common"))
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-            }
-        }
-        val androidMain by getting {
-            dependencies {
-                implementation(kotlin("stdlib"))
+                implementation(kotlin("test-multiplatform"))
             }
         }
         val androidTest by getting {
             dependencies {
-                implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
             }
         }
